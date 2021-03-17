@@ -1,4 +1,4 @@
-package com.app.service.covid.api;
+package com.app.mining.service.covid.api;
 
 import java.io.IOException;
 import java.text.Format;
@@ -11,11 +11,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.mapper.CovidCasesAreaMapper;
-import com.app.repository.covid.CovidCasesRepository;
 import com.app.entity.CovidCasesAreaEntity;
+import com.app.mapper.CovidCasesAreaMapper;
 import com.app.model.CovidCasesArea;
 import com.app.model.api.Covid19ApiModel;
+import com.app.repository.covid.CovidCasesRepository;
 import com.app.util.DateTools;
 import com.app.util.ResffulServices;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -29,14 +29,15 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
-
+	
 	private final static String URL = "https://api.covid19api.com/total/country/malaysia/status/confirmed?from=";
 
 	private final static String API_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
+	// TODO: Practical 5, move the required logic and files from covid-web project to here
 	@Autowired
 	CovidCasesRepository covidCasesRepository;
-
+	
 	@Override
 	public String doMining() throws Exception {
 
@@ -62,31 +63,20 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 
 	}
 
-	private Boolean isDuplicate(List<CovidCasesAreaEntity> covidCasesAreaEntities, Covid19ApiModel covid19ApiModel) {
+	private int getCasesDifferent(List<Covid19ApiModel> covid19ApiModels) {
+		// TODO Auto-generated method stub
+		Covid19ApiModel first = covid19ApiModels.get(0);
+		Covid19ApiModel last = covid19ApiModels.get(1);
 
-		log.info("isDuplicate Starts. covid19ApiModel={}", covid19ApiModel);
+		log.info("first cases ={}, last cases= {} ", first.getCases(), last.getCases());
 
-		for (CovidCasesAreaEntity covidCasesAreaEntity : covidCasesAreaEntities) {
+		int totalCases = last.getCases() - first.getCases();
 
-			Format formatter = new SimpleDateFormat(API_DATE_FORMAT);
-			String convertedDate = formatter.format(covidCasesAreaEntity.getDate());
-
-			log.info("api date='{}' , entity date='{}'", covid19ApiModel.getDate(), convertedDate);
-
-			if (convertedDate.equals(covid19ApiModel.getDate())) {
-				log.info("is matched");
-				return true;
-			} else {
-				log.info("is not matched");
-			}
-
-		}
-		log.info("isDuplicate Ends. nothing Duplicated here");
-		return false;
+		return totalCases;
 	}
 
 	private void updateDB(List<Covid19ApiModel> covid19ApiModels) throws ParseException {
-
+		// TODO Auto-generated method stub
 		List<CovidCasesAreaEntity> covidCasesAreaEntities = covidCasesRepository.listLast5RecordsHQL();
 
 		for (Covid19ApiModel covid19ApiModel : covid19ApiModels) {
@@ -108,20 +98,31 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 		log.info("updateDB Ends.");
 	}
 
-	private int getCasesDifferent(List<Covid19ApiModel> covid19ApiModels) {
-		Covid19ApiModel first = covid19ApiModels.get(0);
-		Covid19ApiModel last = covid19ApiModels.get(1);
+	private boolean isDuplicate(List<CovidCasesAreaEntity> covidCasesAreaEntities, Covid19ApiModel covid19ApiModel) {
+		// TODO Auto-generated method stub
+		log.info("isDuplicate Starts. covid19ApiModel={}", covid19ApiModel);
 
-		log.info("first cases ={}, last cases= {} ", first.getCases(), last.getCases());
+		for (CovidCasesAreaEntity covidCasesAreaEntity : covidCasesAreaEntities) {
 
-		int totalCases = last.getCases() - first.getCases();
+			Format formatter = new SimpleDateFormat(API_DATE_FORMAT);
+			String convertedDate = formatter.format(covidCasesAreaEntity.getDate());
 
-		return totalCases;
+			log.info("api date='{}' , entity date='{}'", covid19ApiModel.getDate(), convertedDate);
 
+			if (convertedDate.equals(covid19ApiModel.getDate())) {
+				log.info("is matched");
+				return true;
+			} else {
+				log.info("is not matched");
+			}
+
+		}
+		log.info("isDuplicate Ends. nothing Duplicated here");
+		return false;
 	}
 
-	private List<Covid19ApiModel> convertToObjects(String json)
-			throws JsonParseException, JsonMappingException, IOException {
+	private List<Covid19ApiModel> convertToObjects(String json) throws JsonParseException, JsonMappingException, IOException {
+		// TODO Auto-generated method stub
 		ObjectMapper mapper = new ObjectMapper();
 
 		CollectionType javaType = mapper.getTypeFactory().constructCollectionType(List.class, Covid19ApiModel.class);
@@ -131,11 +132,11 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 		log.info("convertToObjects ends. cases  = {} ", cases.size());
 
 		return cases;
-
 	}
 
 	private String getTotalCasesMYFromAPI(String defaultDate, String defaultTime, Date date1DayBefore,
 			Date date3DayBefore) throws Exception {
+		// TODO Auto-generated method stub
 		StringBuffer urlBuffer = new StringBuffer();
 
 		String stringDate1DayBefore = DateTools.getDate(defaultDate, date1DayBefore) + defaultTime;
@@ -171,11 +172,11 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 		}
 
 		log.info("getLast5RecordsMY ends.  cases = {} ", casesPojos);
-		return casesPojos;
-	}
+		return casesPojos;	}
 
 	@Override
 	public String getTotalfromDB() throws Exception {
+		// TODO Auto-generated method stub
 		log.info("getTotalfromDB starts. ");
 		List<CovidCasesAreaEntity> casesEntities = covidCasesRepository.listLast2Records();
 		log.info("getTotalfromDB casesEntities size ={} ", casesEntities.size());
@@ -206,6 +207,8 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 		
 		
 		log.info("getTotalfromDB ends.  totalCases = {} date={}", totalCases,date);
-		return "Total Cases " + totalCases + " (" + date + ")";
+		return "Total Cases " + totalCases + " (" + date + ")";	
 	}
+
+
 }
