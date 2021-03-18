@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.app.mapper.CovidCasesAreaMapper;
@@ -207,5 +209,29 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 		
 		log.info("getTotalfromDB ends.  totalCases = {} date={}", totalCases,date);
 		return "Total Cases " + totalCases + " (" + date + ")";
+	}
+
+	@Override
+	public List<CovidCasesArea> getLast5RecordsMYWithSize(int size) throws Exception {
+		// TODO Auto-generated method stub
+		Pageable page = PageRequest.of(0, size);
+		
+		List<CovidCasesAreaEntity> list = covidCasesRepository.listLast5RecordsHQLWithSize(page);
+
+		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
+
+		// complete the code here as getLast5RecordsMY method
+		List<CovidCasesArea> casesPojos = new ArrayList<CovidCasesArea>();
+		for (CovidCasesAreaEntity covidCasesAreaEntity : list) {
+			CovidCasesArea covidCasesArea = mapper.asResource(covidCasesAreaEntity);
+			casesPojos.add(covidCasesArea);
+		}
+		
+		if (casesPojos.size() == 0) {
+			throw new Exception("query return nothing!");
+		}
+		
+		log.info("getLast5RecordsMYWithSize ends.");
+		return casesPojos;	
 	}
 }
