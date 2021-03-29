@@ -5,13 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.model.CovidCasesArea;
 import com.app.model.CovidCasesDesc;
-import com.app.repository.covid.CovidCasesDescRepository;
-import com.app.repository.covid.CovidCasesRepository;
 import com.app.service.covid.CovidService;
 import com.app.service.covid.api.CovidMiningAPITotalCases;
 
@@ -34,15 +35,15 @@ public class CovidController {
 	private final static String GET_HELLO_API = "/covid/hello";
 
 	private final static String GET_LOG_API = "/covid/logging";
+	
+	private final static String PUT_API = "/covid/put";
+
+	private static final String POST_API = "/covid/post";
+
+	private final static String DELETE_COVID_SOAPUI = "/covid/delete/soap";
 
 	@Autowired
 	private CovidService covidService;
-
-	@Autowired
-	private CovidCasesRepository covidCasesRepository;
-
-	@Autowired
-	private CovidCasesDescRepository covidCasesDescRepository;
 
 	@Autowired
 	CovidMiningAPITotalCases covidMiningAPITotalCases;
@@ -167,5 +168,33 @@ public class CovidController {
 		}
 
 		return num;
+	}
+	
+	@PutMapping(PUT_API)
+	CovidCasesDesc putCovid(@RequestBody CovidCasesDesc covidCasesDesc) throws Exception {
+		log.info("putCovid() started, covidCasesDesc={}", covidCasesDesc);
+
+		// complete the implementation below
+		return covidService.putCovid(covidCasesDesc);
+
+		//log.info("putCovid() ends, covidCasesDescSaved={}", null);
+		//return should be the Saved CovidCasesDesc with values
+	}
+	
+	@PostMapping(POST_API)
+	CovidCasesDesc postCovid(@RequestBody CovidCasesDesc covidCasesDesc) throws Exception {
+		log.info("postCovid() started, covidCasesDesc={}", covidCasesDesc);
+
+		// complete the implementation below
+		return covidService.postCovid(covidCasesDesc);
+
+	}
+	
+	@DeleteMapping(DELETE_COVID_SOAPUI)
+	int deleteCovidSoap(@RequestParam(required = true) String desc) throws Exception {
+		log.info("deleteCovidSoap() started desc={}", desc);
+		
+		// complete the implementation below
+		return covidService.deleteCovidSoap(desc);
 	}
 }
