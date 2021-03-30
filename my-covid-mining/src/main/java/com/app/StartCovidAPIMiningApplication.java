@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication(scanBasePackages = { "com.app.mining.repository", "com.app.mining.controller",
-		"com.app.entity","com.app.mining.service"})
+		"com.app.entity","com.app.mining.service", "com.app.config"})
 @Slf4j
 public class StartCovidAPIMiningApplication {
 

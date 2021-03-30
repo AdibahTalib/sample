@@ -2,6 +2,7 @@ package com.app.service.covid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,4 +45,79 @@ public class CovidBonusServiceImpl implements CovidBonusService{
 		log.info("bonus() ends");
 		return CovidCasesBonus;
 	}
+
+	@Override
+	public CovidCasesBonus addCovidBonus(String desc) {
+		// TODO Auto-generated method stub
+		log.info("addCovidBonus started");
+		
+		CovidCasesBonus covidCasesBonus = null;
+		
+		CovidCasesBonusEntity covidCasesBonusEntity = new CovidCasesBonusEntity();
+	
+		covidCasesBonusEntity.setDescription(desc);
+	
+		CovidCasesBonusEntity savedEntity = covidCasesBonusRepository.save(covidCasesBonusEntity);
+	
+		CovidAreaBonusMapper mapper = Selma.builder(CovidAreaBonusMapper.class).build();
+	
+		covidCasesBonus = mapper.asResource(savedEntity);
+		
+		return covidCasesBonus;	
+	}
+
+	@Override
+	public int deleteCovidBonus(long id) {
+		// TODO Auto-generated method stub
+		log.info("deleteCovidBonus started");
+
+		Optional<CovidCasesBonusEntity> entityOptional = covidCasesBonusRepository.findById(id);
+
+		log.info("Entity found == " + entityOptional.isPresent());
+
+		if (entityOptional.isPresent()) {
+			CovidCasesBonusEntity covidCasesBonusEntity = entityOptional.get();
+				
+			covidCasesBonusRepository.delete(covidCasesBonusEntity);
+				
+			return 1;
+		}
+		return 0;	}
+
+	@Override
+	public CovidCasesBonus putCovidBonus(CovidCasesBonus covidCasesBonus) {
+		// TODO Auto-generated method stub
+		log.info("putCovid started");
+		
+		CovidAreaBonusMapper mapper = Selma.builder(CovidAreaBonusMapper.class).build();
+		
+		CovidCasesBonusEntity covidCasesBonusEntity = mapper.asEntity(covidCasesBonus);
+		
+		CovidCasesBonusEntity savedEntity = covidCasesBonusRepository.save(covidCasesBonusEntity);
+		
+		covidCasesBonus = mapper.asResource(savedEntity);
+
+		return covidCasesBonus;	}
+
+	@Override
+	public CovidCasesBonus postCovidBonus(CovidCasesBonus covidCasesBonus) {
+		// TODO Auto-generated method stub
+		log.info("postCovidBonus started");
+		
+		CovidAreaBonusMapper mapper = Selma.builder(CovidAreaBonusMapper.class).build();
+		
+		CovidCasesBonusEntity covidCasesBonusEntity = mapper.asEntity(covidCasesBonus);
+		
+		CovidCasesBonusEntity savedEntity = covidCasesBonusRepository.save(covidCasesBonusEntity);
+		
+		covidCasesBonus = mapper.asResource(savedEntity);
+
+		return covidCasesBonus;	}
+
+	@Override
+	public int deleteCovidSoapBonus(String desc) {
+		// TODO Auto-generated method stub
+		int deleted = covidCasesBonusRepository.deleteWithCon(desc);
+
+		return deleted;	}
 }
