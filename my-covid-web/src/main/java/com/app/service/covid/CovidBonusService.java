@@ -18,4 +18,6 @@ public interface CovidBonusService {
 
 	int deleteCovidSoapBonus(String desc);
 
+	List<String> findDuplicateNdelete();
+
 }

@@ -97,7 +97,8 @@ public class CovidBonusServiceImpl implements CovidBonusService{
 		
 		covidCasesBonus = mapper.asResource(savedEntity);
 
-		return covidCasesBonus;	}
+		return covidCasesBonus;	
+	}
 
 	@Override
 	public CovidCasesBonus postCovidBonus(CovidCasesBonus covidCasesBonus) {
@@ -112,12 +113,26 @@ public class CovidBonusServiceImpl implements CovidBonusService{
 		
 		covidCasesBonus = mapper.asResource(savedEntity);
 
-		return covidCasesBonus;	}
+		return covidCasesBonus;	
+	}
 
 	@Override
 	public int deleteCovidSoapBonus(String desc) {
 		// TODO Auto-generated method stub
 		int deleted = covidCasesBonusRepository.deleteWithCon(desc);
 
-		return deleted;	}
+		return deleted;
+	}
+	
+	public List<String> findDuplicateNdelete() {
+		log.info("findDuplicateNdelete() started");
+		
+		List<String> e = covidCasesBonusRepository.findDuplicate();
+		
+		for (String s: e) {
+			covidCasesBonusRepository.deleteWithCon(s);
+		}
+		
+		return e;
+	}
 }

@@ -32,9 +32,10 @@ public class CovidBonusController {
 
 	private final static String DELETE_COVID_SOAPUI_BONUS = "/covid/delete/soap/bonus";
 	
+	private final static String FIND_DUPLICATE_DELETE_COVID = "/covid/delete/duplicate/bonus";
+
 	@Autowired
 	CovidBonusService covidBonusService;
-	
 
 	// CovidCasesBonus - Java POJO 
 	// CovidCasesBonusEntity - DB Entity File
@@ -133,5 +134,22 @@ public class CovidBonusController {
 		
 		// complete the implementation below
 		return covidBonusService.deleteCovidSoapBonus(desc);
+	}
+	
+	// TODO: Angular Practical 11 - Remove Duplicate values
+	@DeleteMapping(FIND_DUPLICATE_DELETE_COVID)
+	List<String> findDuplicateNdelete() throws Exception {
+		log.info("findDuplicateNdelete() started");
+		
+		// complete the implementation below
+		// ensure logic related to repo move to service implementation
+		List<String> e = covidBonusService.findDuplicateNdelete();
+		
+		for (String s: e) {
+			log.info ("Duplicate value found on Bonus Table ---> " + s);
+						
+			log.info ("Value Deleted ---> " + s);
+		}
+		return e;
 	}
 }
