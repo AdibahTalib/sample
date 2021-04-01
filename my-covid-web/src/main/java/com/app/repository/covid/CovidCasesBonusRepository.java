@@ -15,7 +15,7 @@ public interface CovidCasesBonusRepository extends JpaRepository<CovidCasesBonus
 	@Transactional
 	@Modifying
 	@Query("DELETE FROM CovidCasesBonusEntity c WHERE c.description=:desc")
-	int deleteWithCon(String desc);
+	int deleteDescWithCondition(String desc);
 
 	// Complete the JPQL below
 	@Query("SELECT description FROM CovidCasesBonusEntity d GROUP BY d.description HAVING COUNT(*)>1")

@@ -13,5 +13,5 @@ public interface CovidCasesDescRepository  extends JpaRepository<CovidCasesDescE
 	@Transactional
 	@Modifying
 	@Query("DELETE FROM CovidCasesDescEntity c WHERE c.description=:desc")
-	int deleteWithCon(String desc);	
+	int deleteDescWithCondition(String desc);	
 }

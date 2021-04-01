@@ -119,7 +119,7 @@ public class CovidBonusServiceImpl implements CovidBonusService{
 	@Override
 	public int deleteCovidSoapBonus(String desc) {
 		// TODO Auto-generated method stub
-		int deleted = covidCasesBonusRepository.deleteWithCon(desc);
+		int deleted = covidCasesBonusRepository.deleteDescWithCondition(desc);
 
 		return deleted;
 	}
@@ -130,7 +130,7 @@ public class CovidBonusServiceImpl implements CovidBonusService{
 		List<String> e = covidCasesBonusRepository.findDuplicate();
 		
 		for (String s: e) {
-			covidCasesBonusRepository.deleteWithCon(s);
+			covidCasesBonusRepository.deleteDescWithCondition(s);
 		}
 		
 		return e;

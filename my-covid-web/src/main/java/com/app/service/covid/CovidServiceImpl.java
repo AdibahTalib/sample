@@ -147,9 +147,12 @@ public class CovidServiceImpl implements CovidService {
 
 	@Override
 	public int deleteCovidSoap(String desc) {
-		// TODO Auto-generated method stub
-		int deleted = covidCasesDescRepository.deleteWithCon(desc);
-
-		return deleted;
+		// TODO Auto-generated method stub		
+		int delCount = covidCasesDescRepository.deleteDescWithCondition(desc);
+		
+		if(delCount > 0 )
+			return 1;
+		
+		return 0;
 	}
 }
