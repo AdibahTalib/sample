@@ -23,32 +23,33 @@ public class CovidBonusServiceImpl implements CovidBonusService{
 	CovidCasesBonusRepository covidCasesBonusRepository;
 	
 	@Override
-	public List<CovidCasesBonus> bonus() throws Exception {
-		// TODO Auto-generated method stub
-//		List<CovidCasesBonus> CovidCasesBonus = null;
+	public List<CovidCasesBonus> bonus() {
 		log.info("bonus() started");
 		
-		CovidAreaBonusMapper mapper = Selma.builder(CovidAreaBonusMapper.class).build();
 		List<CovidCasesBonusEntity> covidCaseBonusEntities = covidCasesBonusRepository.findAll();
-		List<CovidCasesBonus> CovidCasesBonus = new ArrayList<CovidCasesBonus>();
+
+		CovidAreaBonusMapper mapper = Selma.builder(CovidAreaBonusMapper.class).build();
+
+		List<CovidCasesBonus> covidCasesBonus = new ArrayList<>();
+		
 		if (covidCaseBonusEntities == null) {
 			throw new IDNotFoundException(0L);
+		
 		} else {
 
 			for (CovidCasesBonusEntity entity : covidCaseBonusEntities) {
 				CovidCasesBonus model = mapper.asResource(entity);
-				CovidCasesBonus.add(model);
+				covidCasesBonus.add(model);
 				log.info("entity total desc={}", entity.getDescription());
 			}
 			log.info(" bonus() return Size={}", covidCaseBonusEntities.size());
 		}
 		log.info("bonus() ends");
-		return CovidCasesBonus;
+		return covidCasesBonus;
 	}
 
 	@Override
 	public CovidCasesBonus addCovidBonus(String desc) {
-		// TODO Auto-generated method stub
 		log.info("addCovidBonus started");
 		
 		CovidCasesBonus covidCasesBonus = null;
@@ -68,7 +69,6 @@ public class CovidBonusServiceImpl implements CovidBonusService{
 
 	@Override
 	public int deleteCovidBonus(long id) {
-		// TODO Auto-generated method stub
 		log.info("deleteCovidBonus started");
 
 		Optional<CovidCasesBonusEntity> entityOptional = covidCasesBonusRepository.findById(id);
@@ -86,7 +86,6 @@ public class CovidBonusServiceImpl implements CovidBonusService{
 
 	@Override
 	public CovidCasesBonus putCovidBonus(CovidCasesBonus covidCasesBonus) {
-		// TODO Auto-generated method stub
 		log.info("putCovid started");
 		
 		CovidAreaBonusMapper mapper = Selma.builder(CovidAreaBonusMapper.class).build();
@@ -102,7 +101,6 @@ public class CovidBonusServiceImpl implements CovidBonusService{
 
 	@Override
 	public CovidCasesBonus postCovidBonus(CovidCasesBonus covidCasesBonus) {
-		// TODO Auto-generated method stub
 		log.info("postCovidBonus started");
 		
 		CovidAreaBonusMapper mapper = Selma.builder(CovidAreaBonusMapper.class).build();
@@ -118,9 +116,12 @@ public class CovidBonusServiceImpl implements CovidBonusService{
 
 	@Override
 	public int deleteCovidSoapBonus(String desc) {
-		// TODO Auto-generated method stub
+		log.info("deleteCovidSoapBonus() started desc={}", desc);
+		
 		int deleted = covidCasesBonusRepository.deleteDescWithCondition(desc);
 
+		log.info("deleteCovidSoapBonus() ended deleted={}", deleted);
+		
 		return deleted;
 	}
 	

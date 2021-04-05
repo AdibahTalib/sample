@@ -8,6 +8,10 @@ import java.util.Date;
 
 public class DateTools {
 
+	private DateTools() {
+		//This is intentional
+	}
+	
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DateTools.class);
 
 	public static Date minusDate(int day) {

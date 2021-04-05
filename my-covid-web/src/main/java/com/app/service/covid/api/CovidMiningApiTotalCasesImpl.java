@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.app.entity.CovidCasesAreaEntity;
+import com.app.error.GeneralException;
 import com.app.mapper.CovidCasesAreaMapper;
 import com.app.model.CovidCasesArea;
 import com.app.model.api.Covid19ApiModel;
@@ -30,20 +31,17 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 
 		log.info("first cases ={}, last cases= {} ", first.getCases(), last.getCases());
 
-		int totalCases = last.getCases() - first.getCases();
-
-		return totalCases;
+		return (last.getCases() - first.getCases());
 
 	}
 
 	@Override
-	public List<CovidCasesArea> getLast5RecordsMY() throws Exception {
-		// TODO Auto-generated method stub
+	public List<CovidCasesArea> getLast5RecordsMY() {
 		List<CovidCasesAreaEntity> casesEntities = covidCasesRepository.listLast5RecordsHQL();
 
 		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
 
-		List<CovidCasesArea> casesPojos = new ArrayList<CovidCasesArea>();
+		List<CovidCasesArea> casesPojos = new ArrayList<>();
 		for (CovidCasesAreaEntity covidCasesAreaEntity : casesEntities) {
 			CovidCasesArea covidCasesArea = mapper.asResource(covidCasesAreaEntity);
 			casesPojos.add(covidCasesArea);
@@ -54,7 +52,7 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 	}
 
 	@Override
-	public String getTotalfromDB() throws Exception {
+	public String getTotalfromDB() {
 		log.info("getTotalfromDB starts. ");
 		List<CovidCasesAreaEntity> casesEntities = covidCasesRepository.listLast2Records();
 		log.info("getTotalfromDB casesEntities size ={} ", casesEntities.size());
@@ -62,7 +60,7 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 		int totalCases = 0;
 		String date = "";
 		if (!casesEntities.isEmpty()) {
-			List<Covid19ApiModel> covidApiModels = new ArrayList<Covid19ApiModel>();
+			List<Covid19ApiModel> covidApiModels = new ArrayList<>();
 
 			CovidCasesAreaEntity covidCasesAreaEntity = casesEntities.get(1);
 			log.info("getTotalfromDB Last covidCasesAreaEntity date={}, cases={}", covidCasesAreaEntity.getDate(),
@@ -89,23 +87,21 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 	}
 
 	@Override
-	public List<CovidCasesArea> getLast5RecordsMYWithSize(int size) throws Exception {
-		// TODO Auto-generated method stub
+	public List<CovidCasesArea> getLast5RecordsMYWithSize(int size) {
 		Pageable page = PageRequest.of(0, size);
 		
 		List<CovidCasesAreaEntity> list = covidCasesRepository.listLast5RecordsHQLWithSize(page);
 
 		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
 
-		// complete the code here as getLast5RecordsMY method
-		List<CovidCasesArea> casesPojos = new ArrayList<CovidCasesArea>();
+		List<CovidCasesArea> casesPojos = new ArrayList<>();
 		for (CovidCasesAreaEntity covidCasesAreaEntity : list) {
 			CovidCasesArea covidCasesArea = mapper.asResource(covidCasesAreaEntity);
 			casesPojos.add(covidCasesArea);
 		}
 		
-		if (casesPojos.size() == 0) {
-			throw new Exception("query return nothing!");
+		if (casesPojos.isEmpty()) {
+			throw new GeneralException("query return nothing!");
 		}
 		
 		log.info("getLast5RecordsMYWithSize ends.");

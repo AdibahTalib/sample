@@ -6,7 +6,7 @@ import com.app.model.CovidCasesBonus;
 
 public interface CovidBonusService {
 	
-	List<CovidCasesBonus> bonus() throws Exception;
+	List<CovidCasesBonus> bonus();
 
 	CovidCasesBonus addCovidBonus(String desc);
 

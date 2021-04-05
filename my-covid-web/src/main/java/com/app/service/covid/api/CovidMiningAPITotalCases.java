@@ -6,9 +6,9 @@ import com.app.model.CovidCasesArea;
 
 public interface CovidMiningAPITotalCases {
 	
-	List<CovidCasesArea> getLast5RecordsMY() throws Exception;
+	List<CovidCasesArea> getLast5RecordsMY();
 
-	String getTotalfromDB() throws Exception;
+	String getTotalfromDB();
 
-	List<CovidCasesArea> getLast5RecordsMYWithSize(int size) throws Exception;
+	List<CovidCasesArea> getLast5RecordsMYWithSize(int size);
 }

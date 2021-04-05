@@ -34,9 +34,13 @@ public class CovidServiceImpl implements CovidService {
 	@Override
 	public List<CovidCasesArea> getCovid() {
 		log.info("getCovid started");
+		
 		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
+		
 		List<CovidCasesAreaEntity> covidCaseEntities = covidCasesRepository.findAll();
-		List<CovidCasesArea> covidCasesAreaList = new ArrayList<CovidCasesArea>();
+		
+		List<CovidCasesArea> covidCasesAreaList = new ArrayList<>();
+		
 		if (covidCaseEntities == null) {
 			throw new IDNotFoundException(0L);
 		} else {
@@ -58,7 +62,7 @@ public class CovidServiceImpl implements CovidService {
 		log.info("getCovidDesc started");
 		CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
 		List<CovidCasesDescEntity> covidCaseDescEntities = covidCasesDescRepository.findAll();
-		List<CovidCasesDesc> covidCasesDescList = new ArrayList<CovidCasesDesc>();
+		List<CovidCasesDesc> covidCasesDescList = new ArrayList<>();
 		if (covidCaseDescEntities == null) {
 			throw new IDNotFoundException(0L);
 		} else {
@@ -75,7 +79,6 @@ public class CovidServiceImpl implements CovidService {
 
 	}
 	
-	// TODO: Related to Practical 4 (Add)
 	@Override
 	public CovidCasesDesc addCovid(String desc) {
 		log.info("addCovid started");
@@ -96,14 +99,13 @@ public class CovidServiceImpl implements CovidService {
 
 	}
 
-	// TODO: Related to Practical 4 (Delete)
 	@Override
 	public int deleteCovid(long id) {
 		log.info("deleteCovid started");
 
 		Optional<CovidCasesDescEntity> entityOptional = covidCasesDescRepository.findById(id);
 
-		log.info("Entity found == " + entityOptional.isPresent());
+		log.info("Entity found == {}" + entityOptional.isPresent());
 
 		if (entityOptional.isPresent()) {
 			CovidCasesDescEntity covidAreaDescEntity = entityOptional.get();
@@ -147,12 +149,12 @@ public class CovidServiceImpl implements CovidService {
 
 	@Override
 	public int deleteCovidSoap(String desc) {
-		// TODO Auto-generated method stub		
-		int delCount = covidCasesDescRepository.deleteDescWithCondition(desc);
+		log.info("deleteCovidSoap() started desc={}", desc);
 		
-		if(delCount > 0 )
-			return 1;
+		int deleted = covidCasesDescRepository.deleteDescWithCondition(desc);
 		
-		return 0;
+		log.info("deleteCovidSoap() ended deleted={}", deleted);
+		
+		return deleted;
 	}
 }

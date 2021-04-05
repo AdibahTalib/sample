@@ -1,14 +1,16 @@
 package com.app.mining.service.covid.api;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import com.app.model.CovidCasesArea;
 
 public interface CovidMiningAPITotalCases {
 
-	String doMining() throws Exception;
+	public String doMining() throws IOException, ParseException;
 
-	List<CovidCasesArea> getLast5RecordsMY() throws Exception;
+	public List<CovidCasesArea> getLast5RecordsMY();
 
-	String getTotalfromDB() throws Exception;
+	public String getTotalfromDB();
 }
